@@ -1,0 +1,33 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "org.angels.ubilabs.androidthings_thingworx_demo"
+        minSdkVersion 24
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            buildConfigField "String", "ThingworxIP", '"YOUR THINGWORX IP"'
+            buildConfigField "String", "Things", '"YOUR THINGID"'
+            buildConfigField "String", "AppKey", '"YOUR APPKEY"'
+        }
+        release {
+            initWith(buildTypes.debug)
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    provided 'com.google.android.things:androidthings:0.2-devpreview'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
+}
