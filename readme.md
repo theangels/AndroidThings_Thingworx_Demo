@@ -33,17 +33,23 @@ If you have everything set up correctly:
 ThingWorx Platform configuration (optional)
 ==============================================
 0. Go to your project in the ThingWorx Platform
-0. Under *Things* (In the *MODELING* ), click the *New* button and input the *Name* and select the *Thing Template* as GenericThing.
+0. Under *Things* (In the *MODELING*), click the *New* button and input the *Name* and select the *Thing Template* as GenericThing.
 0. Under *Properties*, click the *Add My Property*, also input the *Name* as "Temperature", select the *Base Type* as Number and checked the "Persistent" and "Logged".
 0. Do again but set the *Name* as "Humidity", and click *Save* button.
-0. Under *Value Streams* (In the *DATA STORAGE* ), click the *New* button, choose the *Value Stream* and input the *Name*.
-0. Under *Application Keys* (In the *SECURITY* ), click the *New* button, input the *Name* and select the *User Name Reference*. For example, I chose "Administrator"(Warning! It is unsafe).
-0. Under *Things* (In the *MODELING* ), edit the thing you just created and add *Tag*.
+0. Under *Value Streams* (In the *DATA STORAGE*), click the *New* button, choose the *Value Stream* and input the *Name*.
+0. Under *Application Keys* (In the *SECURITY*), click the *New* button, input the *Name* and select the *User Name Reference*. For example, I chose "Administrator"(Warning! It is unsafe).
+0. Under *Things* (In the *MODELING*), edit the thing you just created and add *Tag*.
 0. Use the same way to add the same *Tag* in *Value Streams* and *Application Keys*.
 
 After running the sample, you can check that your data in ThingWorx Platform by running the service *QueryPropertyHistory*
 
 Note: If the build.gradle isn't be update, the app will run offline and will not send sensor data to the ThingWorx Platform.
+
+To do
+==============================================
+0. Use chart to display the weather data stream.
+0. Support multiple sensors
+
 
 License
 -------
