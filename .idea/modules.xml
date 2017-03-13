@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Thingworx_AndroidThings_Demo.iml" filepath="$PROJECT_DIR$/Thingworx_AndroidThings_Demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidThings_Thingworx_Demo.iml" filepath="$PROJECT_DIR$/AndroidThings_Thingworx_Demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

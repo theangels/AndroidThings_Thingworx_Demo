@@ -1,4 +1,4 @@
-package org.angels.ubilabs.androidthings_thingworx_demo;
+package org.angels.ubilabs.androidthings_thingworx_demo.control;
 
 
 import android.os.Handler;
@@ -7,25 +7,26 @@ import android.util.Log;
 
 import com.google.android.things.pio.I2cDevice;
 
+import org.angels.ubilabs.androidthings_thingworx_demo.model.WeatherData;
+
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-class I2CManager {
+public class I2CManager {
     private static final String TAG = I2CManager.class.getSimpleName();
 
     private Handler handler;
     private HandlerThread handlerThread;
 
 
-    private List<Integer> weatherData;
+    private WeatherData weatherData;
     private I2cDevice device;
     private int startAddress;
 
 
     private static final long PUBLISH_INTERVAL_MS = TimeUnit.SECONDS.toMillis(3);
 
-    I2CManager(List<Integer> weatherData, I2cDevice device, int startAddress) throws IOException {
+    public I2CManager(WeatherData weatherData, I2cDevice device, int startAddress) throws IOException {
         this.weatherData = weatherData;
         this.device = device;
         this.startAddress = startAddress;
@@ -35,12 +36,12 @@ class I2CManager {
         handler = new Handler(handlerThread.getLooper());
     }
 
-    void start() {
+    public void start() {
         handler.post(publishRunnable);
     }
 
 
-    void close() {
+    public void close() {
         handler.removeCallbacks(publishRunnable);
         handlerThread.quitSafely();
     }
@@ -68,10 +69,10 @@ class I2CManager {
         int te = dataString.indexOf('H');
         int he = dataString.indexOf('E');
         if (ts >= 0 && te >= 0 && he >= 0) {
-            weatherData.set(0, Integer.valueOf(dataString.substring(ts + 1, te)));
-            weatherData.set(1, Integer.valueOf(dataString.substring(te + 1, he)));
+            weatherData.addTemperature(Integer.valueOf(dataString.substring(ts + 1, te)));
+            weatherData.addHumidity(Integer.valueOf(dataString.substring(te + 1, he)));
         }
-        Log.d(TAG, "Current T: " + weatherData.get(0) + ", H: " + weatherData.get(1));
+        Log.d(TAG, "Current T: " + weatherData.getCurrentTemperature() + ", H: " + weatherData.getCurrentHumidity());
         return data;
     }
 }

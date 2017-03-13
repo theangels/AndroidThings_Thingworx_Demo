@@ -1,4 +1,4 @@
-package org.angels.ubilabs.androidthings_thingworx_demo;
+package org.angels.ubilabs.androidthings_thingworx_demo.control;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,27 +7,29 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
+import org.angels.ubilabs.androidthings_thingworx_demo.BuildConfig;
+import org.angels.ubilabs.androidthings_thingworx_demo.model.WeatherData;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-class Publisher {
-    private static final String TAG = Publisher.class.getSimpleName();
+public class PublishManager {
+    private static final String TAG = PublishManager.class.getSimpleName();
 
     private Context context;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
 
-    private List<Integer> weatherData;
+    private WeatherData weatherData;
 
     private static final long PUBLISH_INTERVAL_MS = TimeUnit.SECONDS.toMillis(4);
 
-    Publisher(Context context, List<Integer> weatherData) throws IOException {
+    public PublishManager(Context context, WeatherData weatherData) throws IOException {
         this.context = context;
         this.weatherData = weatherData;
 
@@ -36,11 +38,11 @@ class Publisher {
         mHandler = new Handler(mHandlerThread.getLooper());
     }
 
-    void start() {
+    public void start() {
         mHandler.post(mPublishRunnable);
     }
 
-    void close() {
+    public void close() {
         mHandler.removeCallbacks(mPublishRunnable);
         mHandlerThread.quitSafely();
     }
@@ -80,14 +82,15 @@ class Publisher {
                 //这里要注意的是，在构造JSON字符串的时候，实践证明，最好不要使用单引号，而是用“\”进行转义，否则会报错
                 // 关于这一点在上面给出的参考文章里面有说明
                 String jsonParam = "{" +
-                        "\"Temperature\":" + weatherData.get(0) + "," +
-                        "\"Humidity\":" + weatherData.get(1) +
+                        "\"Temperature\":" + weatherData.getCurrentTemperature() + "," +
+                        "\"Humidity\":" + weatherData.getCurrentHumidity() +
                         "}";
                 dos.writeBytes(jsonParam);
                 dos.flush();
                 dos.close();
 
-                if (urlConn.getResponseCode() == 200) {
+                int code = urlConn.getResponseCode();
+                if (code == 200) {
                     InputStreamReader isr = new InputStreamReader(urlConn.getInputStream());
                     BufferedReader br = new BufferedReader(isr);
                     String inputLine;
@@ -97,7 +100,7 @@ class Publisher {
                     isr.close();
                     urlConn.disconnect();
                 } else {
-                    Log.e(TAG, "连接失败!");
+                    Log.e(TAG, "连接失败! Code: " + code);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

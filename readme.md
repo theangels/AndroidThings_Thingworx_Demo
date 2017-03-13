@@ -47,7 +47,6 @@ Note: If the build.gradle isn't be update, the app will run offline and will not
 
 To do
 ==============================================
-0. Use chart to display the weather data stream.
 0. Support multiple sensors
 
 

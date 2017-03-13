@@ -1,4 +1,4 @@
-package org.angels.ubilabs.androidthings_thingworx_demo;
+package org.angels.ubilabs.androidthings_thingworx_demo.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,10 +9,15 @@ import android.widget.Button;
 import com.google.android.things.pio.I2cDevice;
 import com.google.android.things.pio.PeripheralManagerService;
 
+import org.angels.ubilabs.androidthings_thingworx_demo.R;
+import org.angels.ubilabs.androidthings_thingworx_demo.control.ChartManager;
+import org.angels.ubilabs.androidthings_thingworx_demo.control.I2CManager;
+import org.angels.ubilabs.androidthings_thingworx_demo.control.PublishManager;
+import org.angels.ubilabs.androidthings_thingworx_demo.model.WeatherData;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import lecho.lib.hellocharts.view.LineChartView;
 
 
 public class HomeActivity extends Activity {
@@ -27,7 +32,7 @@ public class HomeActivity extends Activity {
 
     private I2CManager i2CManager;
 
-    private Publisher publisher;
+    private PublishManager publishManager;
 
     private ChartManager chartManager;
 
@@ -45,10 +50,7 @@ public class HomeActivity extends Activity {
             }
         });
 
-        List<Integer> weatherData = new ArrayList<>(Arrays.asList(0, 0));
-//        List<Integer> temperature = new ArrayList<>();
-//        List<Integer> humidity = new ArrayList<>();
-
+        WeatherData weatherData = new WeatherData(20);
 
         // Attempt to access the I2C device
         try {
@@ -58,12 +60,12 @@ public class HomeActivity extends Activity {
             i2CManager = new I2CManager(weatherData, i2cDevice, I2C_ADDRESS);
             i2CManager.start();
 
-            publisher = new Publisher(this, weatherData);
-            publisher.start();
+            publishManager = new PublishManager(this, weatherData);
+            publishManager.start();
 
-//            LineChartView lineChartView = (LineChartView) findViewById(R.id.chart);
-//            chartManager = new ChartManager(temperature, humidity, lineChartView);
-//            chartManager.start();
+            LineChartView lineChartView = (LineChartView) findViewById(R.id.chart);
+            chartManager = new ChartManager(weatherData, lineChartView);
+            chartManager.start();
 
         } catch (IOException e) {
             Log.w(TAG, "Unable to access UART device", e);
@@ -78,8 +80,8 @@ public class HomeActivity extends Activity {
             i2CManager.close();
         }
 
-        if (publisher != null) {
-            publisher.close();
+        if (publishManager != null) {
+            publishManager.close();
         }
 
         if (chartManager != null) {
